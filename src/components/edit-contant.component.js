@@ -8,6 +8,7 @@ class Editcontact extends Component {
         this.onChangeUsername = this.onChangeUsername.bind(this);
         this.onChangePhoneNumber = this.onChangePhoneNumber.bind(this);
         this.onChangeEmail = this.onChangeEmail.bind(this);
+        this.onChangeImage = this.onChangeImage.bind(this);
         this.onUpload = this.onUpload.bind(this);
         this.onSubmit = this.onSubmit.bind(this);
     
@@ -25,7 +26,8 @@ class Editcontact extends Component {
             this.setState({
               username: response.data.username,
               phonenumber: response.data.phonenumber,
-              email: response.data.email
+              email: response.data.email,
+              image: response.data.image
             })   
           })
           .catch(function (error) {
@@ -52,9 +54,15 @@ class Editcontact extends Component {
         })
     }
 
-    onUpload(e) {  
+    onChangeImage(e) {  
         this.setState({
-          image: URL.createObjectURL(e.target.files[0])
+          image: e.target.value
+        })
+    }
+
+    onUpload(e){
+        this.setState({
+            image: URL.createObjectURL(e.target.files[0])
         })
     }
     
@@ -64,7 +72,8 @@ class Editcontact extends Component {
         const existing = {
             username: this.state.username,
             phonenumber: this.state.phonenumber,
-            email: this.state.email
+            email: this.state.email,
+            image: this.state.image
         }
     
         console.log(existing);
@@ -80,33 +89,32 @@ class Editcontact extends Component {
 
             <div className = "container">
                 <div class="row">
-                    <div class="col-4">
+                    <div class="col-4" >
                         <div>
-                            <form>
+                            <form onSubmit={this.onSubmit}>
                                 <div className="form-group">
                                     <input type="file" 
                                         ref = "image"
                                         required
+                                        onInput = {this.onChangeImage}
                                         onChange={this.onUpload}
-                                    />   
+                                    />
                                 </div>
                                 <img src={this.state.image} style= {{ width: '171px', height: '180px'}}/> 
-                                <div className="form-group" style= {{position: 'absolute', right: '55%', bottom: -20, transform: 'translateX(-40%)'}}>
-                                    <input type="submit" value="Upload" className="btn btn-primary" />
-                                </div>
                             </form>
                         </div>
-                        <div style={{ fontFamily: "Georgia", fontSize:18}}>
+                        <div style={{ fontFamily: "Georgia", fontSize:18 }}>
                             Hello, {this.state.username}
                         </div>
                     </div>
                     <div class="col-8">
                         <h3>Update Contact Details</h3>
-                            <form >
+                            <form onSubmit={this.onSubmit }>
                                 <div className="form-group"> 
                                     <label>Username: </label>
                                     <input  type="text"
                                         required
+                                        ref="name"
                                         className="form-control"
                                         value={this.state.username}
                                         onChange={this.onChangeUsername}
@@ -116,8 +124,9 @@ class Editcontact extends Component {
                                     <label>PhoneNumber: </label>
                                     <input  type="text"
                                         required
+                                        ref="phone"
                                         className="form-control"
-                                        value={this.state.phonenumber}
+                                        value={this.state.phonenumber} 
                                         onChange={this.onChangePhoneNumber}
                                     />
                                 </div>
@@ -125,21 +134,20 @@ class Editcontact extends Component {
                                     <label>Email: </label>
                                     <input type="text" 
                                         required
+                                        ref="emails"
                                         className="form-control"
                                         value={this.state.email}
                                         onChange={this.onChangeEmail}
                                     />
                                 </div>
-                            </form>
-                    </div>
-                            <form onSubmit={this.onSubmit }>
-                                <div className="form-group" style={{ position: 'absolute', right: '20%', bottom: 60, transform: 'translateX(-50%)'}}>
+                                <div className="form-group" style={{ position: 'absolute', right: '20%', bottom: -70, transform: 'translateX(-40%)'}}>
                                     <input type="submit" value="Save" className="btn btn-primary" />
                                 </div>
+
                             </form>
-                   
+                    </div> 
                 </div>
-            </div>
+            </div>        
         )
     }
     

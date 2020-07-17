@@ -8,15 +8,15 @@ class Newcontact extends Component {
         this.onChangeUsername = this.onChangeUsername.bind(this);
         this.onChangePhoneNumber = this.onChangePhoneNumber.bind(this);
         this.onChangeEmail = this.onChangeEmail.bind(this);
-        this.onUpload = this.onUpload.bind(this);
+        this.onChangeImage = this.onChangeImage.bind(this);
         this.onSubmit = this.onSubmit.bind(this);
-        this.onSubmitImage = this.onSubmitImage.bind(this);
     
         this.state = {
             username: '',
             phonenumber: '',
             email: '',
-            image: ''
+            image: '',
+            imagename: ''
         }
 
         this.state = {
@@ -110,9 +110,10 @@ class Newcontact extends Component {
     this.setState({fields});
     }
 
-    onUpload(e) {  
+    onChangeImage(e) {  
         this.setState({
-            image: URL.createObjectURL(e.target.files[0])
+            image: URL.createObjectURL(e.target.files[0]),
+            imagename: e.target.files[0]
         })
     }
     
@@ -133,27 +134,20 @@ class Newcontact extends Component {
             email: e.target.value
         })
     }
-    
-    onSubmitImage(e){
-        e.preventDefault();
-        
-        if(this.fileValidation()) {
-            alert("Image submitted");
-        }
-        else{
-            alert("Error while Uploading");
-        }
-    }
 
     onSubmit(e) {
         e.preventDefault();
+     
+      // Details of the uploaded file 
+      console.log(this.state.image); 
 
-        if(this.handleValidation()) {
+        if(this.handleValidation() && this.fileValidation()) {
 
             const newcontact = {
                 username: this.state.username,
                 phonenumber: this.state.phonenumber,
-                email: this.state.email
+                email: this.state.email,
+                image: this.state.image
             }
         
             console.log(newcontact);
@@ -177,23 +171,20 @@ class Newcontact extends Component {
                 <div class="row">
                     <div class="col-4" >
                         <div>
-                            <form onSubmit={this.onSubmitImage}>
+                            <form onSubmit={this.onSubmit}>
                                 <div className="form-group">
                                     <input type="file" 
                                         ref = "image"
                                         required
                                         onInput={this.imageChange.bind(this, "image")}
-                                        onChange={this.onUpload}
+                                        onChange={this.onChangeImage}
                                     />
                                     <span style={{color: "red"}}>{this.state.errors["image"]}</span>
                                 </div>
                                 <img src={this.state.image} style= {{ width: '171px', height: '180px'}}/> 
-                                <div className="form-group" style= {{position: 'fixed', left: '14%', bottom: 170, transform: 'translateX(-10%)'}}>
-                                    <input type="submit" value="Upload" className="btn btn-primary" />
-                                </div>
                             </form>
                         </div>
-                        <div style={{ fontFamily: "Georgia", fontSize:18, position: 'fixed', left: '14%', bottom: 140, transform: 'translateX(-10%)' }}>
+                        <div style={{ fontFamily: "Georgia", fontSize:18, position: 'fixed', left: '14%', bottom: 200, transform: 'translateX(-10%)' }}>
                             Hello, {this.state.username}
                         </div>
                     </div>
@@ -232,6 +223,7 @@ class Newcontact extends Component {
                                         required
                                         ref="emails"
                                         className="form-control"
+                                        value={this.state.email}
                                         placeholder = "eg: abc123_@domain.domainsuffix"
                                         onInput={this.handleChange.bind(this, "emails")} 
                                         onChange={this.onChangeEmail}
@@ -245,8 +237,7 @@ class Newcontact extends Component {
                             </form>
                     </div> 
                 </div>
-            </div>
-                
+            </div>         
         )
       }
 }
