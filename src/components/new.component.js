@@ -16,7 +16,7 @@ class Newcontact extends Component {
             phonenumber: '',
             email: '',
             image: '',
-            imagename: ''
+            imagename: null
         }
 
         this.state = {
@@ -111,9 +111,10 @@ class Newcontact extends Component {
     }
 
     onChangeImage(e) {  
+        let blob = new Blob([e.target.files[0]], {type: 'image/png'| 'image/jpg' | 'image/jpeg'});
         this.setState({
-            image: URL.createObjectURL(e.target.files[0]),
-            imagename: e.target.files[0]
+            image: URL.createObjectURL(blob),
+            imagename: e.target.files[0].name
         })
     }
     
@@ -137,12 +138,8 @@ class Newcontact extends Component {
 
     onSubmit(e) {
         e.preventDefault();
-     
-      // Details of the uploaded file 
-      console.log(this.state.image); 
 
         if(this.handleValidation() && this.fileValidation()) {
-
             const newcontact = {
                 username: this.state.username,
                 phonenumber: this.state.phonenumber,
@@ -152,12 +149,12 @@ class Newcontact extends Component {
         
             console.log(newcontact);
         
-            axios.post('http://localhost:8000/new/create/', newcontact)
+            axios.post('http://localhost:8000/new/create/',newcontact)
               .then(res => console.log(res.data));
     
             alert("Form submitted");
         
-            window.location = '/';
+            // window.location = '/'; // Here is the drawback of revokeurlobject.....
         }
         else {
                 return alert("Form has errors.");

@@ -62,7 +62,7 @@ class Editcontact extends Component {
 
     onUpload(e){
         this.setState({
-            image: URL.createObjectURL(e.target.files[0])
+            image: window.URL.createObjectURL(e.target.files[0])
         })
     }
     

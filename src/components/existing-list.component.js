@@ -49,7 +49,7 @@ class Existinglist extends Component {
 
     render() {
         return (
-          <div>
+          <div className = "container">
             <h3>Existing Contact List</h3>
             <table className="table">
               <thead className="thead-light">
