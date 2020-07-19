@@ -7,6 +7,7 @@ const Existing = props => (
       <td>{props.existing.username}</td>
       <td>{props.existing.phonenumber}</td>
       <td>{props.existing.email}</td>
+      {/* <td><img src={props.existing.image} style= {{ width: '171px', height: '180px'}}/></td> */}
       <td>
         <Link to={"/new/open/"+props.existing._id}>Open</Link> | <Link to={"/new/edit/"+props.existing._id}>Update</Link> | <a href="#" onClick={() => { props.deleteExisting(props.existing._id) }}>Delete</a>
       </td>
@@ -35,6 +36,8 @@ class Existinglist extends Component {
     deleteExisting(id) {
         axios.delete('http://localhost:8000/existing/'+id)
           .then(response => { console.log(response.data)});
+
+        alert('Deleted Successfully!!!');
     
         this.setState({
             existing: this.state.existing.filter(el => el._id !== id)

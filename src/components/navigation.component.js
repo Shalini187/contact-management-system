@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom';
 
 class Navigation extends Component {
   render() {
+    document.title = 'Contact Management Application'
     return (
       <div className = "container">
 

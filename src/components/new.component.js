@@ -112,9 +112,9 @@ class Newcontact extends Component {
 
     onChangeImage(e) {  
         let blob = new Blob([e.target.files[0]], {type: 'image/png'| 'image/jpg' | 'image/jpeg'});
+        
         this.setState({
-            image: URL.createObjectURL(blob),
-            imagename: e.target.files[0].name
+            image: URL.createObjectURL(blob)
         })
     }
     
@@ -173,6 +173,7 @@ class Newcontact extends Component {
                                     <input type="file" 
                                         ref = "image"
                                         required
+                                        accept=".jpg, .jpeg, .png"
                                         onInput={this.imageChange.bind(this, "image")}
                                         onChange={this.onChangeImage}
                                     />

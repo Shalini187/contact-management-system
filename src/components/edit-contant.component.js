@@ -80,8 +80,11 @@ class Editcontact extends Component {
     
         axios.post('http://localhost:8000/existing/update/' + this.props.match.params.id, existing)
           .then(res => console.log(res.data));
+
+        alert('Updated Successfully!!!');
     
-        window.location = '/';
+        // window.location = '/';
+        return;
     }
 
     render() {
@@ -96,6 +99,7 @@ class Editcontact extends Component {
                                     <input type="file" 
                                         ref = "image"
                                         required
+                                        accept=".jpg, .jpeg, .png"
                                         onInput = {this.onChangeImage}
                                         onChange={this.onUpload}
                                     />
