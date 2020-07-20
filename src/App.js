@@ -4,9 +4,8 @@ import { BrowserRouter as Router, Route} from "react-router-dom";
 
 import Navigation from "./components/navigation.component";
 import ExistingList from "./components/existing-list.component";
-import Editcontact from "./components/edit-contant.component";
 import Newcontact from "./components/new.component";
-import Opencontact from "./components/open-contact.component";
+
 
 function App() {
   return (
@@ -14,11 +13,19 @@ function App() {
       <div className="container">
       <Navigation />
       <br/>
-        <Route path="/" exact component={ExistingList} />
-        <Route path="/existing" component={ExistingList} />
-        <Route path = "/new/create" component = {Newcontact} />
-        <Route path = "/new/edit/:id" component = {Editcontact} />
-        <Route path = "/new/open/:id" component = {Opencontact} />
+        <Route path="/" exact component = { () =>
+            <ExistingList/>
+          }
+          />
+          <Route path = "/new" exact component = { (props) =>
+            <Newcontact {...props}/> 
+          } />
+          <Route path = "/new/:id" exact component = { (props) =>
+            <Newcontact {...props}/>
+          } />
+          <Route path = "/new/open/:id" component = { (props) =>
+            <Newcontact disable =  'true' {...props}/>
+          } />
       </div>
     </Router>
   );

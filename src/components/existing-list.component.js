@@ -9,7 +9,7 @@ const Existing = props => (
       <td>{props.existing.email}</td>
       {/* <td><img src={props.existing.image} style= {{ width: '171px', height: '180px'}}/></td> */}
       <td>
-        <Link to={"/new/open/"+props.existing._id}>Open</Link> | <Link to={"/new/edit/"+props.existing._id}>Update</Link> | <a href="#" onClick={() => { props.deleteExisting(props.existing._id) }}>Delete</a>
+        <Link to={"/new/open/"+props.existing._id}>Open</Link> | <Link to={"/new/"+props.existing._id}>Update</Link> | <a href="#" onClick={() => { props.deleteExisting(props.existing._id) }}>Delete</a>
       </td>
     </tr>
   )

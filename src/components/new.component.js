@@ -15,8 +15,7 @@ class Newcontact extends Component {
             username: '',
             phonenumber: '',
             email: '',
-            image: '',
-            imagename: null
+            image: ''
         }
 
         this.state = {
@@ -26,33 +25,21 @@ class Newcontact extends Component {
 
     }
 
-    fileValidation() {
-        let fields = this.state.fields;
-        let errors = {};
-        let formIsValid = true;
 
-        //File
-        if(!fields["image"]){
-            formIsValid = false;
-            errors["image"] = "Cannot be empty";
-         }
-
-
-        if(typeof fields["image"] !== "undefined"){
-            if(!fields["image"].match(/(.png|.jpg|.jpeg)$/i)){
-                formIsValid = false;
-                errors["image"] = "'.jpeg','.jpg','png' formats are only allowed.";
-            }        
-        } 
-   
-       this.setState({errors: errors});
-       return formIsValid;
-    }
-
-    imageChange(field, e) {         
-        let fields = this.state.fields;
-        fields[field] = e.target.value;        
-        this.setState({fields});
+    componentDidMount() {
+        axios.get('http://localhost:8000/existing/'+this.props.match.params.id)
+          .then(response => {
+            this.setState({
+              username: response.data.username,
+              phonenumber: response.data.phonenumber,
+              email: response.data.email,
+              image: response.data.image
+            })   
+          })
+          .catch(function (error) {
+            console.log(error);
+        })
+    
     }
 
 
@@ -62,11 +49,6 @@ class Newcontact extends Component {
         let formIsValid = true;
    
         //Name
-        if(!fields["name"]){
-           formIsValid = false;
-           errors["name"] = "Cannot be empty";
-        }
-   
         if(typeof fields["name"] !== "undefined"){
            if(!fields["name"].match(/^[a-zA-Z]+ [a-zA-Z]+$/)){
               formIsValid = false;
@@ -75,11 +57,6 @@ class Newcontact extends Component {
         }
    
         //Phone Number
-       if(!fields["phone"]){
-         formIsValid = false;
-         errors["phone"] = "Cannot be empty";
-       }
-   
       if(typeof fields["phone"] !== "undefined"){
          if(!fields["phone"].match(/^(\+\d{1,2}\s)?\(?\d{3}\)?[\s.-]?\d{3}[\s.-]?\d{4}$/)){
             formIsValid = false;
@@ -88,27 +65,32 @@ class Newcontact extends Component {
       }
       
         //Email
-        if(!fields["emails"]){
-           formIsValid = false;
-           errors["emails"] = "Cannot be empty";
-        }
-
       if(typeof fields["emails"] !== "undefined"){
         if(!fields["emails"].match(/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/)){
             formIsValid = false;
             errors["emails"] = "Enter Valid Email";
          }        
-      }   
+      }  
+      
+       //File
+       if(typeof fields["image"] !== "undefined"){
+        if(!fields["image"].match(/(.png|.jpg|.jpeg)$/i)){
+            formIsValid = false;
+            errors["image"] = "'.jpeg','.jpg','png' formats are only allowed.";
+        }        
+    }
    
        this.setState({errors: errors});
        return formIsValid;
    }
+
 
    handleChange(field, e) {         
     let fields = this.state.fields;
     fields[field] = e.target.value;        
     this.setState({fields});
     }
+
 
     onChangeImage(e) {  
         let blob = new Blob([e.target.files[0]], {type: 'image/png'| 'image/jpg' | 'image/jpeg'});
@@ -117,50 +99,61 @@ class Newcontact extends Component {
             image: URL.createObjectURL(blob)
         })
     }
+
     
     onChangeUsername(e) {
         this.setState({
             username: e.target.value
         })
     }
+
     
     onChangePhoneNumber(e) {
         this.setState({
             phonenumber: e.target.value
         })
     }
+
     
     onChangeEmail(e) {
         this.setState({
             email: e.target.value
         })
     }
+    
 
     onSubmit(e) {
         e.preventDefault();
 
-        if(this.handleValidation() && this.fileValidation()) {
-            const newcontact = {
+        if(this.handleValidation()) {
+            const existing = {
                 username: this.state.username,
                 phonenumber: this.state.phonenumber,
                 email: this.state.email,
                 image: this.state.image
             }
         
-            console.log(newcontact);
-        
-            axios.post('http://localhost:8000/new/create/',newcontact)
+            console.log(existing);
+            if(this.props.match.params.id){
+                axios.post('http://localhost:8000/existing/update/' + this.props.match.params.id, existing)
+              .then(res => console.log(res.data));
+    
+            alert('Updated Successfully!!!');
+            }
+            else{
+                axios.post('http://localhost:8000/new/create/',existing)
               .then(res => console.log(res.data));
     
             alert("Form submitted");
-        
+            }
             // window.location = '/'; // Here is the drawback of revokeurlobject.....
         }
         else {
-                return alert("Form has errors.");
+            return alert("Form has errors.");
         }
         
     }
+    
 
     render() {
         return (
@@ -173,8 +166,9 @@ class Newcontact extends Component {
                                     <input type="file" 
                                         ref = "image"
                                         required
+                                        disabled = {this.props.disable}
                                         accept=".jpg, .jpeg, .png"
-                                        onInput={this.imageChange.bind(this, "image")}
+                                        onInput={this.handleChange.bind(this, "image")}
                                         onChange={this.onChangeImage}
                                     />
                                     <span style={{color: "red"}}>{this.state.errors["image"]}</span>
@@ -187,7 +181,7 @@ class Newcontact extends Component {
                         </div>
                     </div>
                     <div class="col-8">
-                        <h3>Create New Contact Details</h3>
+                        <h3>CONTACT DETAILS OF A USER</h3>
                             <form onSubmit={this.onSubmit }>
                                 <div className="form-group"> 
                                     <label>Username: </label>
@@ -197,6 +191,7 @@ class Newcontact extends Component {
                                         className="form-control"
                                         placeholder = "eg: Laxmi Kumar"
                                         value={this.state.username}
+                                        disabled = {this.props.disable}
                                         onInput={this.handleChange.bind(this, "name")} 
                                         onChange={this.onChangeUsername}
                                     />
@@ -210,6 +205,7 @@ class Newcontact extends Component {
                                         className="form-control"
                                         placeholder = "eg: 9876543210"
                                         value={this.state.phonenumber}
+                                        disabled = {this.props.disable}
                                         onInput={this.handleChange.bind(this, "phone")} 
                                         onChange={this.onChangePhoneNumber}
                                     />
@@ -222,6 +218,7 @@ class Newcontact extends Component {
                                         ref="emails"
                                         className="form-control"
                                         value={this.state.email}
+                                        disabled = {this.props.disable}
                                         placeholder = "eg: abc123_@domain.domainsuffix"
                                         onInput={this.handleChange.bind(this, "emails")} 
                                         onChange={this.onChangeEmail}
@@ -229,9 +226,8 @@ class Newcontact extends Component {
                                     <span style={{color: "red"}}>{this.state.errors["emails"]}</span>
                                 </div>
                                 <div className="form-group" style={{ position: 'absolute', right: '20%', bottom: -70, transform: 'translateX(-40%)'}}>
-                                    <input type="submit" value="Save" className="btn btn-primary" />
+                                    <input type="submit" disabled = {this.props.disable}  value="Save" className="btn btn-primary" />
                                 </div>
-
                             </form>
                     </div> 
                 </div>

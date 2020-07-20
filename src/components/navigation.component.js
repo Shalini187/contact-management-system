@@ -20,14 +20,14 @@ class Navigation extends Component {
           <div className="collpase navbar-collapse">
             <ul className="nav navbar-nav mr-auto">
               <li className="navbar-item">
-                <Link to="/new/create" className="nav-link">
+                <Link to="/new" className="nav-link">
                   <span class="navbar-brand mb-0 h2" style={{ fontFamily: "Georgia", color: 'black', left: '28%'}}>
                     New
                   </span>
                 </Link>
               </li>
               <li className="navbar-item">
-                <Link to="/existing" className="nav-link">
+                <Link to="/" className="nav-link">
                   <span class="navbar-brand mb-0 h2" style={{ fontFamily: "Georgia", color: 'black', left: '48%'}}>
                     Existing Form
                   </span>
