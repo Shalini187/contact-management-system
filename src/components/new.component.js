@@ -63,10 +63,11 @@ class Newcontact extends Component {
             errors["phone"] = "Enter Valid Phonenumber";
          }        
       }
-      
+    
         //Email
       if(typeof fields["emails"] !== "undefined"){
-        if(!fields["emails"].match(/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/)){
+        var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+        if(!fields["emails"].match(re)){
             formIsValid = false;
             errors["emails"] = "Enter Valid Email";
          }        
@@ -100,6 +101,13 @@ class Newcontact extends Component {
         })
     }
 
+    Capitalize(str) {
+        var res = str.split(" ");
+        var first = res[0].charAt(0).toUpperCase() + res[0].slice(1).toLowerCase();
+        var second = res[1].charAt(0).toUpperCase() + res[1].slice(1).toLowerCase();
+
+        return first + " " + second;
+      }
     
     onChangeUsername(e) {
         this.setState({
@@ -127,9 +135,9 @@ class Newcontact extends Component {
 
         if(this.handleValidation()) {
             const existing = {
-                username: this.state.username,
+                username: this.Capitalize(this.state.username),
                 phonenumber: this.state.phonenumber,
-                email: this.state.email,
+                email: this.state.email.toLowerCase(),
                 image: this.state.image
             }
         
